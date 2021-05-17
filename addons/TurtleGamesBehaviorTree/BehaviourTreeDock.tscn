@@ -1,0 +1,143 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/TurtleGamesBehaviorTree/BehaviourTreeDock.cs" type="Script" id=1]
+[ext_resource path="res://addons/TurtleGamesBehaviorTree/BehaviorTreeGraphEdit.cs" type="Script" id=2]
+
+[node name="BehaviorTreeEditor" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 14.0
+text = "Behaviour tree editor"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 18.0
+margin_right = 1024.0
+margin_bottom = 36.0
+
+[node name="NewBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_right = 62.0
+margin_bottom = 18.0
+text = "New tree"
+
+[node name="OpenBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 66.0
+margin_right = 135.0
+margin_bottom = 18.0
+text = "Open tree"
+
+[node name="SaveBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 139.0
+margin_right = 202.0
+margin_bottom = 18.0
+text = "Save tree"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
+margin_left = 206.0
+margin_right = 210.0
+margin_bottom = 18.0
+
+[node name="AddSequenceBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 214.0
+margin_right = 309.0
+margin_bottom = 18.0
+text = "Add sequence"
+
+[node name="AddSelectorBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 313.0
+margin_right = 398.0
+margin_bottom = 18.0
+text = "Add selector"
+
+[node name="AddActionBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 402.0
+margin_right = 474.0
+margin_bottom = 18.0
+text = "Add action"
+
+[node name="AddServiceBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 478.0
+margin_right = 557.0
+margin_bottom = 18.0
+text = "Add service"
+
+[node name="AddGateBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 561.0
+margin_right = 624.0
+margin_bottom = 18.0
+text = "Add Gate"
+
+[node name="HBox" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 40.0
+margin_right = 1024.0
+margin_bottom = 582.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="GraphEdit" type="GraphEdit" parent="VBoxContainer/HBox"]
+margin_right = 520.0
+margin_bottom = 542.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+scroll_offset = Vector2( -233, 0 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBox"]
+margin_left = 524.0
+margin_right = 1024.0
+margin_bottom = 542.0
+
+[node name="AddValueBtn" type="Button" parent="VBoxContainer/HBox/VBoxContainer"]
+margin_right = 500.0
+margin_bottom = 18.0
+text = "Add value"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBox/VBoxContainer"]
+margin_top = 22.0
+margin_right = 500.0
+margin_bottom = 542.0
+rect_min_size = Vector2( 500, 0 )
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="ValueDefinitionsGrid" type="GridContainer" parent="VBoxContainer/HBox/VBoxContainer/ScrollContainer"]
+margin_right = 500.0
+size_flags_horizontal = 3
+columns = 4
+
+[node name="CopyrightLbl" type="Label" parent="VBoxContainer"]
+margin_top = 586.0
+margin_right = 1024.0
+margin_bottom = 600.0
+text = "©TurtleGames - 2021"
+align = 2
+
+[node name="FileDialog" type="FileDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -200.0
+margin_top = -200.0
+margin_right = 200.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 400, 400 )
+resizable = true

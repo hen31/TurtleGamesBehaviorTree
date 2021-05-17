@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/TurtleGamesBehaviorTree/BehaviorTreeNodes/ServiceNode.cs" type="Script" id=1]
+
+[node name="ServiceNode" type="GraphNode"]
+margin_right = 73.0
+margin_bottom = 50.0
+title = "Service"
+slot/0/left_enabled = true
+slot/0/left_type = 1
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 216.0
+margin_bottom = 90.0
+rect_min_size = Vector2( 200, 0 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 200.0
+margin_bottom = 24.0
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_top = 5.0
+margin_right = 89.0
+margin_bottom = 19.0
+text = "Execute every"
+
+[node name="ExcutionTimerSelector" type="SpinBox" parent="VBoxContainer/HBoxContainer"]
+margin_left = 93.0
+margin_right = 167.0
+margin_bottom = 24.0
+max_value = 1000.0
+step = 0.1
+value = 0.1
+suffix = "s"
+
+[node name="ServiceList" type="OptionButton" parent="VBoxContainer"]
+margin_top = 28.0
+margin_right = 200.0
+margin_bottom = 48.0
+text = "CreateRandomStringAction"
+items = [ "CreateRandomStringAction", null, false, 0, null, "PrintTextAction", null, false, 1, null, "WaitTimeAction", null, false, 2, null ]
+selected = 0
+
+[node name="ParameterBox" type="GridContainer" parent="VBoxContainer"]
+margin_top = 52.0
+margin_right = 200.0
+margin_bottom = 66.0
+columns = 2

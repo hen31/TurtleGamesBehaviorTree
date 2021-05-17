@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/TurtleGamesBehaviorTree/BehaviorTreeNodes/ActionNode.cs" type="Script" id=1]
+
+[node name="ActionNode" type="GraphNode"]
+margin_right = 73.0
+margin_bottom = 50.0
+title = "Action"
+slot/0/left_enabled = true
+slot/0/left_type = 1
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 216.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 200, 0 )
+
+[node name="ActionList" type="OptionButton" parent="VBoxContainer"]
+margin_right = 200.0
+margin_bottom = 20.0
+text = "PrintTextAction"
+items = [ "PrintTextAction", null, false, 0, null, "WaitTimeAction", null, false, 1, null ]
+selected = 0
+
+[node name="ParameterBox" type="GridContainer" parent="VBoxContainer"]
+margin_top = 24.0
+margin_right = 200.0
+margin_bottom = 24.0
+columns = 2

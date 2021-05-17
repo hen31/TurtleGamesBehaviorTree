@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/TurtleGamesBehaviorTree/BehaviorTreeNodes/GateNode.cs" type="Script" id=1]
+
+[node name="GateNode" type="GraphNode"]
+anchor_right = 0.104492
+anchor_bottom = 0.0733333
+rect_min_size = Vector2( 300, 0 )
+title = "Gate"
+slot/0/left_enabled = true
+slot/0/left_type = 1
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = true
+slot/0/right_type = 1
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 284.0
+margin_bottom = 74.0
+
+[node name="AddConditionBtn" type="Button" parent="VBoxContainer"]
+margin_right = 268.0
+margin_bottom = 18.0
+text = "Add condition"
+
+[node name="CheckContinuoslyCB" type="CheckBox" parent="VBoxContainer"]
+margin_top = 22.0
+margin_right = 268.0
+margin_bottom = 46.0
+hint_tooltip = "If set will check every frame otherwise only checks at start of gate."
+text = "Check condition continuously"
+
+[node name="ConditionsContainer" type="GridContainer" parent="VBoxContainer"]
+margin_top = 50.0
+margin_right = 268.0
+margin_bottom = 50.0
+columns = 3

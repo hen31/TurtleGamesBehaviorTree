@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30803.129
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TurtleGamesBehaviorTree", "TurtleGamesBehaviorTree.csproj", "{61D2521B-2FF1-4F90-A9F5-EC072F8083C6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		ExportDebug|Any CPU = ExportDebug|Any CPU
+		ExportRelease|Any CPU = ExportRelease|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61D2521B-2FF1-4F90-A9F5-EC072F8083C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61D2521B-2FF1-4F90-A9F5-EC072F8083C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61D2521B-2FF1-4F90-A9F5-EC072F8083C6}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{61D2521B-2FF1-4F90-A9F5-EC072F8083C6}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{61D2521B-2FF1-4F90-A9F5-EC072F8083C6}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{61D2521B-2FF1-4F90-A9F5-EC072F8083C6}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{61D2521B-2FF1-4F90-A9F5-EC072F8083C6}.Release|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{61D2521B-2FF1-4F90-A9F5-EC072F8083C6}.Release|Any CPU.Build.0 = ExportRelease|Any CPU
+		{65329C16-4D78-412B-A04A-909B55C21F1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65329C16-4D78-412B-A04A-909B55C21F1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65329C16-4D78-412B-A04A-909B55C21F1D}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65329C16-4D78-412B-A04A-909B55C21F1D}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{65329C16-4D78-412B-A04A-909B55C21F1D}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{65329C16-4D78-412B-A04A-909B55C21F1D}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{65329C16-4D78-412B-A04A-909B55C21F1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65329C16-4D78-412B-A04A-909B55C21F1D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EB97B09C-F0D1-446E-95CD-5EB611FEE458}
+	EndGlobalSection
+EndGlobal
