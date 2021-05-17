@@ -15,3 +15,5 @@ Currently working:
 Plannend:
 - Sub tree
 - Value type of custom enum
+
+For more information and devblogs of the development look at: https://www.turtlegames.nl/
