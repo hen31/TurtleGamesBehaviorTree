@@ -37,7 +37,7 @@ namespace TurtleGames.BehaviourTreePlugin
 
         public static bool EqualsWithMargin(this Vector3 compare, Vector3 compareTo, float margin = 0.001f)
         {
-            return Mathf.Abs((compare - compareTo).Length()) < margin;
+            return (compare.x.EqualsWithMargin(compareTo.x, margin) && compare.y.EqualsWithMargin(compareTo.y, margin) && compare.z.EqualsWithMargin(compareTo.z, margin));
         }
 
         public static bool EqualsWithMargin(this float compare, float compareTo, float margin = 0.001f)
@@ -47,7 +47,7 @@ namespace TurtleGames.BehaviourTreePlugin
 
         public static bool EqualsWithMargin(this Vector2 compare, Vector2 compareTo, float margin = 0.001f)
         {
-            return Mathf.Abs((compare - compareTo).Length()) < margin;
+            return (compare.x.EqualsWithMargin(compareTo.x, margin) && compare.y.EqualsWithMargin(compareTo.y, margin));
         }
     }
 }

@@ -31,7 +31,7 @@ public class BehaviourTreeDock : Control
         GetNode<Button>("VBoxContainer/HBoxContainer/AddServiceBtn").Connect("pressed", this, nameof(AddServiceClicked));
         GetNode<Button>("VBoxContainer/HBox/VBoxContainer/AddValueBtn").Connect("pressed", this, nameof(AddValueDefinitionClicked));
         GetNode<Button>("VBoxContainer/HBoxContainer/AddGateBtn").Connect("pressed", this, nameof(AddGateClicked));
-        
+
         _valueDefinitionsContainer = GetNode<GridContainer>("VBoxContainer/HBox/VBoxContainer/ScrollContainer/ValueDefinitionsGrid");
 
         _fileDialog = GetNode<FileDialog>("FileDialog");
@@ -176,8 +176,14 @@ public class BehaviourTreeDock : Control
             var jsonSerializerSettings = new JsonSerializerSettings();
             jsonSerializerSettings.TypeNameHandling = TypeNameHandling.All;
             string jsonString = JsonConvert.SerializeObject(_graphEdit.GetTreeDefinition(), jsonSerializerSettings);
+            var dir = new Directory();
+            if (dir.FileExists(path))
+            {
+                dir.Remove(path);
+            }
             Godot.File file = new File();
             file.Open(path, File.ModeFlags.Write);
+
             file.StoreString(jsonString);
             file.Close();
         }

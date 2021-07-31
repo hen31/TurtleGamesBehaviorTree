@@ -217,14 +217,20 @@ namespace TurtleGames.BehaviourTreePlugin
         public override ConditionNodeDefinition GetTypedDefinitionFromNode()
         {
             var conditionNodeDefinition = base.GetTypedDefinitionFromNode();
+            Debug.WriteLine("1");
             conditionNodeDefinition.CheckContinuously = _continuoslyCheckbox.Pressed;
+            Debug.WriteLine("2");
             conditionNodeDefinition.AbortOption = (AbortOption)_abortOptionsButton.GetSelectedId();
+            Debug.WriteLine("3");
             foreach (var condition in _controlsMapping.Keys)
             {
                 Debug.WriteLine($"ConditionOperator {(ConditionOperator)_controlsMapping[condition].OperatorSelector.GetSelectedMetadata()}");
+                Debug.WriteLine("4");
 
                 conditionNodeDefinition.Conditions.Add(new ConditionStorage() { Key = (_controlsMapping[condition].ValueDefinitionSelector.GetSelectedMetadata() as BehaviorTreeValueDefinition)?.Key, ConditionOperator = (ConditionOperator)_controlsMapping[condition].OperatorSelector.GetSelectedMetadata(), Values = condition.Values });
             }
+            Debug.WriteLine("5");
+
             return conditionNodeDefinition;
         }
     }

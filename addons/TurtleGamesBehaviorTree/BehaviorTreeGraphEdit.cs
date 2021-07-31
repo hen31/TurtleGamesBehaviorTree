@@ -190,6 +190,7 @@ namespace TurtleGames.BehaviourTreePlugin
 
         internal void DeleteGraphNode(Node node)
         {
+            Debug.Write("Remove graph node");
             if (node is BehaviorTreeNode behaviorTreeNode)
             {
                 CurrentSelection.Remove(behaviorTreeNode);
