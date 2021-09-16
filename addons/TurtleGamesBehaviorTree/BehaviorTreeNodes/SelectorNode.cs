@@ -11,7 +11,8 @@ namespace TurtleGames.BehaviourTreePlugin
         public override SequenceNodeDefinition GetTypedDefinitionFromNode()
         {
             SequenceNodeDefinition sequenceNodeDefinition = base.GetTypedDefinitionFromNode();
-            return new SelectorNodeDefinition() { SlotCount = sequenceNodeDefinition.SlotCount };
+            sequenceNodeDefinition.Selector =true;
+            return sequenceNodeDefinition;
         }
     }
 }

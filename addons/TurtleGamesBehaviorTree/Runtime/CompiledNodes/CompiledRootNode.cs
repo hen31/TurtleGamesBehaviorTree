@@ -11,27 +11,30 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
     public class CompiledRootNode : CompiledNode
     {
         private CompiledNode _subNode;
+        private CompiledBehaviorTree _compiledBehaviorTree;
         private bool _reintialize = true;
         public override void CompileFromDefinition(Storage.BehaviorTreeDefinition behaviorTreeDefinition, BehaviorTreeNodeDefinition currentNode, CompiledBehaviorTree compiledBehaviorTree)
         {
             var subNode = behaviorTreeDefinition.GetOutgoingConnections(currentNode).FirstOrDefault();
             _subNode = behaviorTreeDefinition.CompileNode(subNode, compiledBehaviorTree, this);
+            _compiledBehaviorTree = compiledBehaviorTree;
         }
 
         public override void Process(float delta)
         {
-            if (_reintialize)
+            if (!_compiledBehaviorTree.CurrentPlayer.Stopping)
             {
-                _subNode.Initialize();
-                _reintialize = false;
+                if (_reintialize)
+                {
+                    _subNode.Initialize();
+                    _reintialize = false;
+                }
+                _subNode.Process(delta);
+                if (_subNode.ExecutionState != TreeExecutionState.InProgress)
+                {
+                    _reintialize = true;
+                }
             }
-            _subNode.Process(delta);
-            if (_subNode.ExecutionState != TreeExecutionState.InProgress)
-            {
-                _reintialize = true;
-            }
-
-
         }
     }
 }

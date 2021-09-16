@@ -15,5 +15,6 @@ namespace TurtleGames.BehaviourTreePlugin.Storage
         public string ServiceName { get; set; }
         public Dictionary<string, object> ParameterValues { get; set; } = new Dictionary<string, object>();
         public double ExecutionTimer { get;  set; }
+        public bool AlwaysExecute { get; set; }
     }
 }

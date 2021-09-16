@@ -1,0 +1,60 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/TurtleGamesBehaviorTree/BehaviorTreeNodes/SubBehaviorTreeNode.cs" type="Script" id=1]
+
+[node name="SubBehaviorTreeNode" type="GraphNode"]
+margin_right = 73.0
+margin_bottom = 50.0
+title = "SubBehavior"
+slot/0/left_enabled = true
+slot/0/left_type = 1
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+SelectTreeBtn = NodePath("VBoxContainer/HBoxContainer/SelectTreeBtn")
+SelectTreeDialog = NodePath("VBoxContainer/HBoxContainer/SelectTreeDialog")
+TreeValuesContainer = NodePath("VBoxContainer/ParameterBox")
+SelectedLineEdit = NodePath("VBoxContainer/HBoxContainer/BehaviorTreeLineEdit")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 216.0
+margin_bottom = 52.0
+rect_min_size = Vector2( 200, 0 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 200.0
+margin_bottom = 24.0
+
+[node name="BehaviorTreeLineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+margin_right = 153.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+editable = false
+virtual_keyboard_enabled = false
+
+[node name="SelectTreeBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 157.0
+margin_right = 200.0
+margin_bottom = 24.0
+text = "Select"
+
+[node name="SelectTreeDialog" type="FileDialog" parent="VBoxContainer/HBoxContainer"]
+margin_left = 109.0
+margin_right = 509.0
+margin_bottom = 400.0
+rect_min_size = Vector2( 400, 400 )
+window_title = "Open a File"
+mode = 0
+
+[node name="ParameterBox" type="GridContainer" parent="VBoxContainer"]
+margin_top = 28.0
+margin_right = 200.0
+margin_bottom = 28.0
+columns = 3

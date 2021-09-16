@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TurtleGames.BehaviourTreePlugin.Nodes
 {
-    public class VectorInput : HBoxContainer
+    public class VectorInput : VBoxContainer
     {
         [Export]
         public bool IsVector2 { get; set; }

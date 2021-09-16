@@ -1,6 +1,7 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using TurtleGames.BehaviourTreePlugin.Nodes;
@@ -76,8 +77,6 @@ namespace TurtleGames.BehaviourTreePlugin
                 dynamicControl.ControlCreationOverrides.Add((int)ParameterTypeDefinition.ValueKey, (DynamicInputControl inputControl, int typeDefinition) =>
                 {
                     var graphEdit = GetParent<BehaviorTreeGraphEdit>();
-                    OptionButton optionButton = new OptionButton();
-                    optionButton.SizeFlagsHorizontal = (int)SizeFlags.ExpandFill;
                     var valueDefinitions = graphEdit.GetBehaviorTreeValueDefinitions();
                     BehaviorTreeValueDefinition defaultValue = null;
                     if (inputControl.DefaultValue != null && inputControl.DefaultValue is string valueDefinitionKey)
@@ -89,25 +88,7 @@ namespace TurtleGames.BehaviourTreePlugin
                         defaultValue = defaultValueDefinition;
                     }
 
-                    optionButton.AddItem("<None>", 0);
-
-                    int selectedIndex = -1;
-                    for (int i = 0; i < valueDefinitions.Count; i++)
-                    {
-                        var valueDefinition = valueDefinitions[i];
-                        optionButton.AddItem(valueDefinition.Key, i + 1);
-                        optionButton.SetItemMetadata(i + 1, valueDefinition);
-                        if (valueDefinition == defaultValue)
-                        {
-                            selectedIndex = i + 1;
-                        }
-
-                    }
-
-                    if (selectedIndex != -1)
-                    {
-                        optionButton.CallDeferred("select", selectedIndex);
-                    }
+                    OptionButton optionButton = CreateOptionForValueDefinitionSelector(valueDefinitions, defaultValue);
 
                     optionButton.Connect("item_selected", this, nameof(ValueKeySelectorKeyChanged), new Godot.Collections.Array() { optionButton });
 
@@ -129,6 +110,8 @@ namespace TurtleGames.BehaviourTreePlugin
                 _controls.Add(parameterDefinition, (parameterLabel, dynamicControl));
             }
         }
+
+
 
         private void ValueKeySelectorKeyChanged(int index, OptionButton optionButton)
         {
@@ -155,25 +138,7 @@ namespace TurtleGames.BehaviourTreePlugin
                     if (parameter.ParameterType == ParameterTypeDefinition.ValueKey)
                     {
                         var optionButton = _controls[parameter].InputControl.GetChild<OptionButton>(0);
-                        var selectedKey = optionButton.GetSelectedMetadata() as BehaviorTreeValueDefinition;
-                        optionButton.Clear();
-                        optionButton.AddItem("<None>", 0);
-                        //Change in Items
-                        int indexOfKey = -1;
-                        for (int i = 0; i < valueDefinitions.Count; i++)
-                        {
-                            var valueDefinition = valueDefinitions[i];
-                            optionButton.AddItem(valueDefinition.Key == "" ? "NoText" : valueDefinition.Key, i + 1);//NOT working??
-                            optionButton.SetItemMetadata(i + 1, valueDefinition);
-                            if (valueDefinition == selectedKey)
-                            {
-                                indexOfKey = i + 1;
-                            }
-                        }
-                        if (indexOfKey != -1)
-                        {
-                            optionButton.CallDeferred("select", indexOfKey);
-                        }
+                        UpdateValueDefinitionsInOptionButton(valueDefinitions, optionButton);
                     }
                 }
             }

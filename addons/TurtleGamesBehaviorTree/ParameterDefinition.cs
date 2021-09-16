@@ -22,6 +22,10 @@ namespace TurtleGames.BehaviourTreePlugin
             {
                 return ParameterTypeDefinition.Float;
             }
+            else if (propertyType == typeof(Guid))
+            {
+                return ParameterTypeDefinition.Guid;
+            }
             else if (propertyType == typeof(int))
             {
                 return ParameterTypeDefinition.Int;

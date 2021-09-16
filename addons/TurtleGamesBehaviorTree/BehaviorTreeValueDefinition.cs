@@ -19,15 +19,17 @@ namespace TurtleGames.BehaviourTreePlugin
 
     }
 
-    public enum ValueTypeDefinition {[Description("Integer")] Int, [Description("String")] String, [Description("Float")] Float, [Description("Vector2")] Vector2, [Description("Vector3")] Vector3, [Description("Node reference")] NodeReference,
-        Bool, [Description("Array")] Array
+    public enum ValueTypeDefinition
+    {
+        [Description("Integer")] Int, [Description("String")] String, [Description("Float")] Float, [Description("Vector2")] Vector2, [Description("Vector3")] Vector3, [Description("Node reference")] NodeReference,
+        Bool, [Description("Array")] Array, [Description("Guid")] Guid
     }
 
     public enum ParameterTypeDefinition
     {
         [Description("Integer")] Int, [Description("String")] String, [Description("Float")] Float, [Description("Vector2")] Vector2, [Description("Vector3")] Vector3, [Description("Value key")] ValueKey,
         Bool,
-        [Description("Array")] Array
+        [Description("Array")] Array, [Description("Guid")] Guid
     }
 
 }

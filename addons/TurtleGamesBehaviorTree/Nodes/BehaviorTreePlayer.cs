@@ -20,23 +20,32 @@ namespace TurtleGames.BehaviourTreePlugin.Nodes
         [Export]
         public bool Play { get; set; } = true;
 
+        public bool Ended { get; private set; }
+        public bool Result { get; private set; }
+
+        public bool Stopping { get; private set; }
+        public void StopBehaviorTree(bool succes)
+        {
+            Debug.WriteLine($"BehaviorTreeStopping({Name})");
+            Stopping = true;
+            Ended = true;
+            Result = succes;
+            QueueFree();
+        }
+
+
         public BehaviorTreeDefinition BehaviorTreeDefinition { get; private set; }
 
         private CompiledBehaviorTree _compiledBehavior;
+        private List<SubBehaviorTreeValueLink> _valueDefinitionValues;
+        private CompiledBehaviorTree _otherBehaviorTree;
+
         public override void _Ready()
         {
             base._Ready();
-            if (!string.IsNullOrWhiteSpace(BehaviorTree))
+            if (!string.IsNullOrWhiteSpace(BehaviorTree) && BehaviorTreeDefinition == null)
             {
-                Godot.File file = new File();
-                if (file.Open(BehaviorTree, File.ModeFlags.Read) == Error.Ok)
-                {
-                    string json = file.GetAsText();
-                    file.Close();
-                    var jsonSerializerSettings = new JsonSerializerSettings();
-                    jsonSerializerSettings.TypeNameHandling = TypeNameHandling.All;
-                    BehaviorTreeDefinition = JsonConvert.DeserializeObject<BehaviorTreeDefinition>(json, jsonSerializerSettings);
-                }
+                BehaviorTreeDefinition = BehaviorTreeDefinition.LoadBehaviorTreeFromFile(BehaviorTree);
             }
         }
 
@@ -45,20 +54,48 @@ namespace TurtleGames.BehaviourTreePlugin.Nodes
             _compiledBehavior.SetTreeValue<T>(key, value);
         }
 
-
         public override void _Process(float delta)
         {
             if (!_initialized)
             {
-                _compiledBehavior = BehaviorTreeDefinition.Compile(GetParent());
+                Node subject = GetParent();
+                while (subject is BehaviorTreePlayer)
+                {
+                    subject = subject.GetParent();
+                }
+                _compiledBehavior = BehaviorTreeDefinition.Compile(subject, this);
+                if (_valueDefinitionValues != null)
+                {
+                    _compiledBehavior.SetLinkedValues(_valueDefinitionValues, _otherBehaviorTree);
+                }
                 _initialized = true;
-                BehaviorTreeDefinition = null;
             }
             if (Play)
             {
                 _compiledBehavior.Process(delta);
+                if (_compiledBehavior.RootNode.ExecutionState != TreeExecutionState.InProgress)
+                {
+                    Debug.WriteLine("SubTree ended");
+                    Play = false;
+                    Ended = true;
+                }
             }
         }
 
+        internal void SetLinkedValues(List<SubBehaviorTreeValueLink> valueDefinitionValues, CompiledBehaviorTree otherBehaviorTree)
+        {
+            _valueDefinitionValues = valueDefinitionValues;
+            _otherBehaviorTree = otherBehaviorTree;
+        }
+
+        public void SetTreeDefinition(BehaviorTreeDefinition subTreeDefinition)
+        {
+            BehaviorTreeDefinition = subTreeDefinition;
+        }
+
+        public void SetValueDefinitions()
+        {
+
+        }
     }
 }

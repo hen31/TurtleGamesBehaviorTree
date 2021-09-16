@@ -11,17 +11,21 @@ namespace TurtleGames.BehaviourTreePlugin
     [Tool]
     public class ServiceNode : BehaviorTreeNode<ServiceNodeDefinition>
     {
+        private CheckBox _alwaysExecute;
         private SpinBox _executionTimeSelector;
         private OptionButton _actionList;
         private GridContainer _parameterList;
         private System.Collections.Generic.Dictionary<ParameterDefinition, (Label NameLabel, Node InputControl)> _controls = new System.Collections.Generic.Dictionary<ParameterDefinition, (Label NameLabel, Node InputControl)>();
         private System.Collections.Generic.Dictionary<ParameterDefinition, object> _values = new System.Collections.Generic.Dictionary<ParameterDefinition, object>();
+
+
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
             base._Ready();
             SetSlot(0, true, 1, Colors.White, true, 1, Colors.White);
             _executionTimeSelector = GetNode<SpinBox>("VBoxContainer/HBoxContainer/ExcutionTimerSelector");
+            _alwaysExecute = GetNode<CheckBox>("VBoxContainer/HBoxContainer2/CheckBox");
             _actionList = GetNode<OptionButton>("VBoxContainer/ServiceList");
             _actionList.Connect("item_selected", this, nameof(ServiceSelectionChanged));
             _parameterList = GetNode<GridContainer>("VBoxContainer/ParameterBox");
@@ -203,6 +207,7 @@ namespace TurtleGames.BehaviourTreePlugin
                 definition.ServiceName = BehaviorTreeRegistry.Instance.TreeServices[_actionList.Selected].Name;
             }
             definition.ExecutionTimer = _executionTimeSelector.Value;
+            definition.AlwaysExecute = _alwaysExecute.Pressed;
             foreach (var parameterDefinition in _values.Keys)
             {
                 if (_values[parameterDefinition] is BehaviorTreeValueDefinition valueDefinition)
@@ -218,7 +223,7 @@ namespace TurtleGames.BehaviourTreePlugin
             return definition;
         }
 
-        internal void InitializeWithServiceName(string actionName, GodotWrapper parameterValues, double excutionTime)
+        internal void InitializeWithServiceName(string actionName, GodotWrapper parameterValues, double excutionTime, bool alwaysExecute)
         {
             RemoveOldParameterControls();
             var itemIndex = BehaviorTreeRegistry.Instance.TreeServices.Select(b => b.Name).TakeWhile(x => x != actionName).Count();
@@ -234,6 +239,7 @@ namespace TurtleGames.BehaviourTreePlugin
             }
             AddControlsForParameters(selectedAction);
             _executionTimeSelector.Value = excutionTime;
+            _alwaysExecute.Pressed =alwaysExecute;
 
         }
 

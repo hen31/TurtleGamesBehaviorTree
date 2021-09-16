@@ -92,15 +92,15 @@ namespace TurtleGames.BehaviourTreePlugin
                         DisconnectionRequest(connection["from"].ToString(), fromPort, connection["to"].ToString(), toPort);
                     }
                 }
-              /*  else if (connection["to"].ToString().Equals(name))
-                {
-                    var toPort = (int)connection["to_port"];
-                    if (toPort == slot)
-                    {
-                        var fromPort = (int)connection["from_port"];
-                        DisconnectionRequest(connection["from"].ToString(), fromPort, connection["to"].ToString(), toPort);
-                    }
-                }*/
+                /*  else if (connection["to"].ToString().Equals(name))
+                  {
+                      var toPort = (int)connection["to_port"];
+                      if (toPort == slot)
+                      {
+                          var fromPort = (int)connection["from_port"];
+                          DisconnectionRequest(connection["from"].ToString(), fromPort, connection["to"].ToString(), toPort);
+                      }
+                  }*/
             }
         }
 
@@ -147,7 +147,15 @@ namespace TurtleGames.BehaviourTreePlugin
                 }
                 else if (behaviorTreeItem is SequenceNodeDefinition sequenceNodeDefinition)
                 {
-                    SequenceNode sequenceNode = GD.Load<PackedScene>("res://addons/TurtleGamesBehaviorTree/BehaviorTreeNodes/SequenceNode.tscn").Instance() as SequenceNode;
+                    SequenceNode sequenceNode = null;
+                    if (sequenceNodeDefinition.Selector)
+                    {
+                        sequenceNode = GD.Load<PackedScene>("res://addons/TurtleGamesBehaviorTree/BehaviorTreeNodes/SelectorNode.tscn").Instance() as SelectorNode;
+                    }
+                    else
+                    {
+                        sequenceNode = GD.Load<PackedScene>("res://addons/TurtleGamesBehaviorTree/BehaviorTreeNodes/SequenceNode.tscn").Instance() as SequenceNode;
+                    }
                     sequenceNode.Name = sequenceNodeDefinition.NodeName;
                     sequenceNode.InitializeSlots(sequenceNodeDefinition.SlotCount);
                     sequenceNode.Offset = sequenceNodeDefinition.Location;
@@ -157,7 +165,7 @@ namespace TurtleGames.BehaviourTreePlugin
                 {
                     ServiceNode serviceNode = GD.Load<PackedScene>("res://addons/TurtleGamesBehaviorTree/BehaviorTreeNodes/ServiceNode.tscn").Instance() as ServiceNode;
                     serviceNode.Name = serviceNodeDefinition.NodeName;
-                    serviceNode.CallDeferred(nameof(serviceNode.InitializeWithServiceName), serviceNodeDefinition.ServiceName, new GodotWrapper(serviceNodeDefinition.ParameterValues), serviceNodeDefinition.ExecutionTimer);
+                    serviceNode.CallDeferred(nameof(serviceNode.InitializeWithServiceName), serviceNodeDefinition.ServiceName, new GodotWrapper(serviceNodeDefinition.ParameterValues), serviceNodeDefinition.ExecutionTimer, serviceNodeDefinition.AlwaysExecute);
                     serviceNode.Offset = serviceNodeDefinition.Location;
                     AddChild(serviceNode);
                 }
@@ -177,6 +185,15 @@ namespace TurtleGames.BehaviourTreePlugin
                     gateNode.CallDeferred(nameof(gateNode.InitializeFromStorage), new GodotWrapper(conditionNodeDefinition));
 
                     AddChild(gateNode);
+                }
+                else if (behaviorTreeItem is SubBehaviorTreeNodeDefinition subBehaviorTreeNodeDefinition)
+                {
+                    SubBehaviorTreeNode subBehaviorTreeNode = GD.Load<PackedScene>("res://addons/TurtleGamesBehaviorTree/BehaviorTreeNodes/SubBehaviorTreeNode.tscn").Instance() as SubBehaviorTreeNode;
+                    subBehaviorTreeNode.Name = subBehaviorTreeNodeDefinition.NodeName;
+                    subBehaviorTreeNode.Offset = subBehaviorTreeNodeDefinition.Location;
+                    subBehaviorTreeNode.CallDeferred(nameof(subBehaviorTreeNode.InitializeFromStorage), new GodotWrapper(subBehaviorTreeNodeDefinition));
+
+                    AddChild(subBehaviorTreeNode);
                 }
 
             }

@@ -82,6 +82,15 @@ margin_right = 624.0
 margin_bottom = 18.0
 text = "Add Gate"
 
+[node name="AddSubBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 628.0
+margin_right = 714.0
+margin_bottom = 18.0
+text = "Add Sub tree"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="HBox" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 40.0
 margin_right = 1024.0

@@ -10,7 +10,7 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
     public class CompiledActionNode : CompiledNode
     {
         private BaseTreeAction _actionToExecute;
-
+        public CompiledBehaviorTree PartOfTree { get; set; }
         public override void CompileFromDefinition(BehaviorTreeDefinition behaviorTreeDefinition, BehaviorTreeNodeDefinition currentNode, CompiledBehaviorTree compiledBehaviorTree)
         {
 
@@ -18,13 +18,15 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
             var actionType = Type.GetType(BehaviorTreeRegistry.Instance.TreeActions.Single(b => b.Name == actionNodeDefinition.ActionName).FullName);
             _actionToExecute = Activator.CreateInstance(actionType) as BaseTreeAction;
             _actionToExecute.SubjectOfTree = compiledBehaviorTree.SubjectOfTree;
+            _actionToExecute.CurrentActionNode = this;
+            PartOfTree = compiledBehaviorTree;
             foreach (var parameterName in actionNodeDefinition.ParameterValues.Keys)
             {
                 CompileBehaviorTreeUtils.SetParameterValueInProperty(_actionToExecute, compiledBehaviorTree, actionType, parameterName, actionNodeDefinition.ParameterValues[parameterName]);
             }
         }
 
-       
+
 
         public override void Initialize()
         {

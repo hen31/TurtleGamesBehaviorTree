@@ -43,7 +43,7 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
         {
             _checkedInitial = false;
             base.Initialize();
-            _subNode.Initialize();
+            _subNode?.Initialize();
         }
 
         public override void Process(float delta)
@@ -58,7 +58,10 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
                 CheckConditions();
                 _checkedInitial = true;
             }
-            _subNode.Process(delta);
+            if (ExecutionState != TreeExecutionState.Failed)
+            {
+                _subNode?.Process(delta);
+            }
             if (_subNode.ExecutionState == TreeExecutionState.Completed)
             {
                 FinishExecution();
@@ -81,7 +84,7 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
                     }
                     if (_abortOption == AbortOption.AbortNodesAfter || _abortOption == AbortOption.Both)
                     {
-                        if(PreviousNode is CompiledMultipleOutConnectionsNode multipleOutConnectionsNode)
+                        if (PreviousNode is CompiledMultipleOutConnectionsNode multipleOutConnectionsNode)
                         {
                             multipleOutConnectionsNode.AbortAfterCurrent();
                         }

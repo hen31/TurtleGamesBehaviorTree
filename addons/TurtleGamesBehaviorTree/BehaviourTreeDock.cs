@@ -31,7 +31,8 @@ public class BehaviourTreeDock : Control
         GetNode<Button>("VBoxContainer/HBoxContainer/AddServiceBtn").Connect("pressed", this, nameof(AddServiceClicked));
         GetNode<Button>("VBoxContainer/HBox/VBoxContainer/AddValueBtn").Connect("pressed", this, nameof(AddValueDefinitionClicked));
         GetNode<Button>("VBoxContainer/HBoxContainer/AddGateBtn").Connect("pressed", this, nameof(AddGateClicked));
-
+        GetNode<Button>("VBoxContainer/HBoxContainer/AddSubBtn").Connect("pressed", this, nameof(AddSubTreeClicked));
+        
         _valueDefinitionsContainer = GetNode<GridContainer>("VBoxContainer/HBox/VBoxContainer/ScrollContainer/ValueDefinitionsGrid");
 
         _fileDialog = GetNode<FileDialog>("FileDialog");
@@ -39,6 +40,12 @@ public class BehaviourTreeDock : Control
 
         BehaviorTreeRegistry.Instance.InitializeRegistry();
         //VBoxContainer/HBoxContainer/SaveBtn
+    }
+
+    private void AddSubTreeClicked()
+    {
+        var node = GD.Load<PackedScene>("res://addons/TurtleGamesBehaviorTree/BehaviorTreeNodes/SubBehaviorTreeNode.tscn").Instance() as SubBehaviorTreeNode;
+        _graphEdit.AddChild(node);
     }
 
     private void AddServiceClicked()
@@ -128,12 +135,42 @@ public class BehaviourTreeDock : Control
     private void ValueTypeSelectionChanged(int index, BehaviorTreeValueDefinition behaviorTreeValueDefinition)
     {
         behaviorTreeValueDefinition.ValueType = (ValueTypeDefinition)index;
+        behaviorTreeValueDefinition.DefaultValue = DetermineDefaultValue(behaviorTreeValueDefinition.ValueType);
         var controls = _definitionNodeMapping[behaviorTreeValueDefinition];
         var newNode = GetControlForValueType(behaviorTreeValueDefinition);
         _valueDefinitionsContainer.AddChildBelowNode(controls.DefaultValueControl, newNode);
         controls.DefaultValueControl.QueueFree();
         controls.DefaultValueControl = newNode;
         _definitionNodeMapping[behaviorTreeValueDefinition] = controls;
+    }
+
+    private object DetermineDefaultValue(ValueTypeDefinition valueType)
+    {
+        if(valueType == ValueTypeDefinition.Guid)
+        {
+            return Guid.Empty;
+        }
+        else if(valueType == ValueTypeDefinition.Float)
+        {
+            return 0f;
+        }
+        else if (valueType == ValueTypeDefinition.Int)
+        {
+            return 0;
+        }
+        else if (valueType == ValueTypeDefinition.Vector3)
+        {
+            return Vector3.Zero;
+        }
+        else if (valueType == ValueTypeDefinition.Vector2)
+        {
+            return Vector2.Zero;
+        }
+        else if (valueType == ValueTypeDefinition.Bool)
+        {
+            return true;
+        }
+        return null;
     }
 
     public static string GetDescriptionFromEnum(Enum value)

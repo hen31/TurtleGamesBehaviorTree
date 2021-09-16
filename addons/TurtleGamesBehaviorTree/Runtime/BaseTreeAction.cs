@@ -5,12 +5,14 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes;
 
 namespace TurtleGames.BehaviourTreePlugin.Runtime
 {
     public enum ActionState { Initializing, InProgress, Succeeded, Failed }
     public abstract class BaseTreeAction
     {
+        public CompiledActionNode CurrentActionNode { get; set; }
         public Node SubjectOfTree { get; set; }
 
         public T GetSubjectOfTree<T>() where T : Node

@@ -17,8 +17,8 @@ namespace TurtleGames.BehaviourTreePlugin.Storage
 
     public enum ConditionOperator
     {
-        [OperatorForValueType(ValueTypeDefinition.NodeReference, ValueTypeDefinition.Array, ValueTypeDefinition.Vector2, ValueTypeDefinition.Vector3, ValueTypeDefinition.String, ValueTypeDefinition.Bool)] IsSet,
-        [OperatorForValueType(ValueTypeDefinition.NodeReference, ValueTypeDefinition.Array, ValueTypeDefinition.Vector2, ValueTypeDefinition.Vector3, ValueTypeDefinition.String, ValueTypeDefinition.Bool)] IsNotSet,
+        [OperatorForValueType(ValueTypeDefinition.NodeReference, ValueTypeDefinition.Array, ValueTypeDefinition.Vector2, ValueTypeDefinition.Vector3, ValueTypeDefinition.String, ValueTypeDefinition.Bool, ValueTypeDefinition.Guid)] IsSet,
+        [OperatorForValueType(ValueTypeDefinition.NodeReference, ValueTypeDefinition.Array, ValueTypeDefinition.Vector2, ValueTypeDefinition.Vector3, ValueTypeDefinition.String, ValueTypeDefinition.Bool, ValueTypeDefinition.Guid)] IsNotSet,
         [OperatorForValueType(ValueTypeDefinition.Float, ValueTypeDefinition.Int)] LessThen,
         [OperatorForValueType(ValueTypeDefinition.Float, ValueTypeDefinition.Int)] MoreThen,
         [OperatorForValueType(ValueTypeDefinition.Float, ValueTypeDefinition.Int)] EqualOrLessThen,

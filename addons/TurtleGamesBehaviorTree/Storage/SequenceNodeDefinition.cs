@@ -13,5 +13,6 @@ namespace TurtleGames.BehaviourTreePlugin.Storage
         }
 
         public int SlotCount { get; set; }
+        public bool Selector { get; set; }
     }
 }

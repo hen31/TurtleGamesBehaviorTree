@@ -30,7 +30,7 @@ namespace TurtleGames.BehaviourTreePlugin.Nodes
         [Signal]
         public delegate void ValueHasChanged(GodotWrapper newValue);
 
-        public Dictionary<int, Func<DynamicInputControl, int,  Node>> ControlCreationOverrides { get; private set; } = new Dictionary<int, Func<DynamicInputControl, int, Node>>();
+        public Dictionary<int, Func<DynamicInputControl, int, Node>> ControlCreationOverrides { get; private set; } = new Dictionary<int, Func<DynamicInputControl, int, Node>>();
 
         private Node GetControlForValueType(ValueTypeDefinition valueType)
         {
@@ -105,9 +105,34 @@ namespace TurtleGames.BehaviourTreePlugin.Nodes
                     }
                     vectorInputForVector3.Connect(nameof(VectorInput.VectorChanged), this, nameof(Vector3ValueChanged));
                     return vectorInputForVector3;
+
+                case ValueTypeDefinition.Guid:
+                    LineEdit guidEdit = new LineEdit();
+                    guidEdit.Connect("text_changed", this, nameof(GuidValueChanged));
+                    guidEdit.SizeFlagsHorizontal = (int)SizeFlags.ExpandFill;
+                    if (DefaultValue != null && DefaultValue is Guid defaultGuid)
+                    {
+                        guidEdit.Text = defaultGuid.ToString();
+                    }
+                    else if (DefaultValue != null && DefaultValue is string defaultGuidAsString)
+                    {
+                        guidEdit.Text = defaultGuidAsString;
+                    }
+                    return guidEdit;
                 default:
                     return new Control();
             }
+        }
+
+        private void GuidValueChanged(string newText)
+        {
+            Guid guidValue = Guid.Empty;
+            if (Guid.TryParse(newText, out Guid guid))
+            {
+                guidValue = guid;
+            }
+            EmitSignal(nameof(ValueHasChanged), new GodotWrapper(guidValue));
+
         }
 
         private void Vector3ValueChanged(Vector2 vector2, Vector3 vector3)

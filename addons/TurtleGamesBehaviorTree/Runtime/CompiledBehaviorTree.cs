@@ -1,16 +1,23 @@
 ﻿using Godot;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TurtleGames.BehaviourTreePlugin.Nodes;
 using TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes;
+using TurtleGames.BehaviourTreePlugin.Storage;
 
 namespace TurtleGames.BehaviourTreePlugin.Runtime
 {
     public class CompiledBehaviorTree
     {
+
+
+
         private List<TreeValue> _treeValues;
         public ReadOnlyCollection<TreeValue> TreeValues
         {
@@ -26,8 +33,26 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime
             {
                 _treeValues = new List<TreeValue>();
             }
-            _treeValues.Add(new TreeValue(key, valueType) { Value = defaultValue });
+            if (valueType == ValueTypeDefinition.Guid)
+            {
+                if (defaultValue is Guid guid)
+                {
+                    _treeValues.Add(new TreeValue(key, valueType) { Value = guid });
+
+                }
+                else if (defaultValue is string guidString)
+                {
+                    _treeValues.Add(new TreeValue(key, valueType) { Value = Guid.Parse(guidString) });
+                }
+
+            }
+            else
+            {
+                _treeValues.Add(new TreeValue(key, valueType) { Value = defaultValue });
+            }
         }
+
+        public BehaviorTreePlayer CurrentPlayer { get; internal set; }
 
         internal TreeValue GetTreeValue(ValueDefinitionKey valueDefinitionKey)
         {
@@ -51,6 +76,30 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime
         {
             var treeValue = _treeValues.FirstOrDefault(b => b.Key == key);
             treeValue.Value = value;
+        }
+
+        internal void SetLinkedValues(List<SubBehaviorTreeValueLink> valueDefinitionValues, CompiledBehaviorTree otherBehaviorTree)
+        {
+            foreach (var treeValueLinkDefinition in valueDefinitionValues)
+            {
+                if (treeValueLinkDefinition.KeepInSync)
+                {
+                    var fromValue = TreeValues.FirstOrDefault(b => b.Key == treeValueLinkDefinition.Name);
+                    var otherValue = otherBehaviorTree.TreeValues.FirstOrDefault(b => b.Key == treeValueLinkDefinition.LinkedTo);
+                    fromValue.OnValueChanged += (newValue) => otherValue.Value = newValue;
+                }
+                else
+                {
+                    var fromValue = TreeValues.FirstOrDefault(b => b.Key == treeValueLinkDefinition.Name);
+                    var otherValue = otherBehaviorTree.TreeValues.FirstOrDefault(b => b.Key == treeValueLinkDefinition.LinkedTo);
+                    if (fromValue != null && otherValue != null)
+                    {
+                        fromValue.Value = otherValue.Value;
+                        Debug.WriteLine($"Set {treeValueLinkDefinition.Name} to {otherValue.Value.ToString()}");
+
+                    }
+                }
+            }
         }
     }
     public enum TreeExecutionState { InProgress, Completed, Failed }

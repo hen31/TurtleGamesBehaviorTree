@@ -15,10 +15,11 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
         private CompiledNode _currentlyExecuting;
         private int _currentIndex = 0;
         private bool _aborting = false;
-
+        private BehaviorTreeNodeDefinition _definition;
 
         public override void CompileFromDefinition(BehaviorTreeDefinition behaviorTreeDefinition, BehaviorTreeNodeDefinition currentNode, CompiledBehaviorTree compiledBehaviorTree)
         {
+            _definition = currentNode;
             var outgoingConnections = behaviorTreeDefinition.GetOutgoingConnections(currentNode);
             _subNodes = outgoingConnections.Select(b => behaviorTreeDefinition.CompileNode(b, compiledBehaviorTree, this)).ToArray();
         }
@@ -43,21 +44,24 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
             if (_currentlyExecuting != null)
             {
                 _currentlyExecuting.Process(delta);
-                if (_currentlyExecuting.ExecutionState == TreeExecutionState.Completed)
-                {
-                    FinishExecution();
-                }
-                else if (_currentlyExecuting.ExecutionState == TreeExecutionState.Failed)
+                while (_currentlyExecuting.ExecutionState == TreeExecutionState.Failed)
                 {
                     if (_currentIndex == _subNodes.Length - 1 || _aborting)
                     {
                         FailExecution();
+                        break;
                     }
                     else
                     {
                         _currentIndex++;
                         SetCurrentlyExecuting();
+                        _currentlyExecuting.Process(delta);
                     }
+                }
+
+                if (_currentlyExecuting.ExecutionState == TreeExecutionState.Completed)
+                {
+                    FinishExecution();
                 }
             }
             else

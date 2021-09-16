@@ -15,7 +15,17 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime
         }
         public string Key { get; private set; }
         public ValueTypeDefinition ValueType { get; }
-        public object Value { get; set; }
+
+        object _value;
+        public object Value
+        {
+            get => _value; set
+            {
+                _value = value;
+                OnValueChanged?.Invoke(_value);
+            }
+        }
+        public Action<object> OnValueChanged { get; internal set; }
     }
 
     public class TreeValue<T> : TreeValue

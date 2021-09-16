@@ -13,6 +13,7 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
         private CompiledNode _subNode;
         private double _executionTimer = 0f;
         private double _sinceLastTime = 0f;
+        private bool _alwaysExecute = false;
         public override void CompileFromDefinition(BehaviorTreeDefinition behaviorTreeDefinition, BehaviorTreeNodeDefinition currentNode, CompiledBehaviorTree compiledBehaviorTree)
         {
 
@@ -20,6 +21,8 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
             var serviceType = Type.GetType(BehaviorTreeRegistry.Instance.TreeServices.Single(b => b.Name == serviceNodeDefinition.ServiceName).FullName);
             _serviceToExecute = Activator.CreateInstance(serviceType) as BaseTreeService;
             _serviceToExecute.SubjectOfTree = compiledBehaviorTree.SubjectOfTree;
+            _alwaysExecute = serviceNodeDefinition.AlwaysExecute;
+
             foreach (var parameterName in serviceNodeDefinition.ParameterValues.Keys)
             {
                 CompileBehaviorTreeUtils.SetParameterValueInProperty(_serviceToExecute, compiledBehaviorTree, serviceType, parameterName, serviceNodeDefinition.ParameterValues[parameterName]);
@@ -39,12 +42,19 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
 
         public override void Process(float delta)
         {
-            _sinceLastTime += delta;
-            if(_sinceLastTime >= _executionTimer)
+            if (!_alwaysExecute)
             {
-                double time = _sinceLastTime - _executionTimer;
-                _serviceToExecute.DoService((float)_sinceLastTime - (float)time);
-                _sinceLastTime = time;
+                _sinceLastTime += delta;
+                if (_sinceLastTime >= _executionTimer)
+                {
+                    double time = _sinceLastTime - _executionTimer;
+                    _serviceToExecute.DoService((float)_sinceLastTime - (float)time);
+                    _sinceLastTime = time;
+                }
+            }
+            else
+            {
+                _serviceToExecute.DoService(delta);
             }
             _subNode.Process(delta);
             if (_subNode.ExecutionState == TreeExecutionState.Failed)
