@@ -130,7 +130,7 @@ scroll_horizontal_enabled = false
 [node name="ValueDefinitionsGrid" type="GridContainer" parent="VBoxContainer/HBox/VBoxContainer/ScrollContainer"]
 margin_right = 500.0
 size_flags_horizontal = 3
-columns = 4
+columns = 5
 
 [node name="CopyrightLbl" type="Label" parent="VBoxContainer"]
 margin_top = 586.0

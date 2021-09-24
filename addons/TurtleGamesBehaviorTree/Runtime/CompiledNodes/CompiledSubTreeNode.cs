@@ -37,18 +37,37 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
             }
             _subBehaviorTreePlayer = new BehaviorTreePlayer
             {
-                Name = _file
+                Name = _file,
+                BehaviorTree = _file
             };
             _subBehaviorTreePlayer.SetTreeDefinition(_subTreeDefinition);
             _subBehaviorTreePlayer.SetLinkedValues(_subBehaviorTreeStorage.ValueDefinitionValues, _compiledBehaviorTree);
+            GetTopMostBehaviorTreePlayer().EmitSignal(nameof(BehaviorTreePlayer.SubBehaviorTreePlayerCreated), _subBehaviorTreePlayer);
             _parentBehaviorTreePlayer.AddChild(_subBehaviorTreePlayer);
         }
 
+        private BehaviorTreePlayer GetTopMostBehaviorTreePlayer()
+        {
+            var parent = _parentBehaviorTreePlayer.GetParent();
+            if (parent is BehaviorTreePlayer)
+            {
+                while (parent.GetParent() is BehaviorTreePlayer parentAsBehaviorTree)
+                {
+                    parent = parentAsBehaviorTree;
+                }
+                return parent as BehaviorTreePlayer;
+            }
+            else
+            {
+                return _parentBehaviorTreePlayer;
+            }
+        }
 
         public override void Process(float delta)
         {
             if (_subBehaviorTreePlayer.Ended)
             {
+                Debug.WriteLine("Sub tree ended: " + _file);
                 FinishExecution();
             }
         }

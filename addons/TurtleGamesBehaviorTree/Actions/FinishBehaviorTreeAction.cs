@@ -12,6 +12,7 @@ namespace TurtleGames.BehaviourTreePlugin.Actions
     {
         public override void DoAction(float delta)
         {
+            
             this.CurrentActionNode.PartOfTree.CurrentPlayer.StopBehaviorTree(true);
             FinishAction();
         }

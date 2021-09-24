@@ -3,18 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyBakkery.Nodes;
+using MyBakkery.SaveData;
+using MyBakkery.Systems.SaveSystem;
 
 namespace TurtleGames.BehaviourTreePlugin.Runtime
 {
     public class TreeValue
     {
-        public TreeValue(string key, ValueTypeDefinition valueType)
+        public TreeValue(string key, ValueTypeDefinition valueType, bool isKeyValue)
         {
             Key = key;
             ValueType = valueType;
+            IsKeyValue = isKeyValue;
         }
         public string Key { get; private set; }
         public ValueTypeDefinition ValueType { get; }
+        public bool IsKeyValue { get; }
 
         object _value;
         public object Value
@@ -26,11 +31,46 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime
             }
         }
         public Action<object> OnValueChanged { get; internal set; }
+
+        internal void SetValue(object value, Nodes.BehaviorTreePlayer behaviorTreePlayer)
+        {
+            Value = GetConvertedValue(value, behaviorTreePlayer);
+        }
+
+        public object GetConvertedValue(object value, Nodes.BehaviorTreePlayer behaviorTreePlayer)
+        {
+            if (ValueType == ValueTypeDefinition.Guid)
+            {
+                if (value is Guid guid)
+                {
+                    return guid;
+
+                }
+                else if (value is string guidString)
+                {
+                    return Guid.Parse(guidString);
+                }
+
+                else
+                {
+                    return value;
+                }
+            }
+            else if (ValueType == ValueTypeDefinition.NodeReference && value is NodeReferenceSaveData nodeReferenceSaveData)
+            {
+                var loader = SaveableNodeRegistry.GetSaveableNodeFinder(nodeReferenceSaveData.NodeType);
+                return loader.FindNodeForType(nodeReferenceSaveData.NodeId, behaviorTreePlayer.FindParentOfType<RestaurantNode>());
+            }
+            else
+            {
+                return value;
+            }
+        }
     }
 
     public class TreeValue<T> : TreeValue
     {
-        public TreeValue(string key, ValueTypeDefinition valueType) : base(key, valueType)
+        public TreeValue(string key, ValueTypeDefinition valueType, bool isKeyValue) : base(key, valueType, isKeyValue)
         {
         }
 

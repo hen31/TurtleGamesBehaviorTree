@@ -15,8 +15,7 @@ namespace TurtleGames.BehaviourTreePlugin
         public ValueTypeDefinition ValueType { get; set; } = ValueTypeDefinition.String;
 
         public object DefaultValue { get; set; }
-
-
+        public bool IsKeyValue { get; set; }
     }
 
     public enum ValueTypeDefinition

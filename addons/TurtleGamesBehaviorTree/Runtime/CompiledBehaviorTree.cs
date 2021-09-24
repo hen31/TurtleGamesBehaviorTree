@@ -27,7 +27,7 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime
             }
         }
 
-        public void AddTreeValue(string key, object defaultValue, ValueTypeDefinition valueType)
+        public void AddTreeValue(string key, object defaultValue, ValueTypeDefinition valueType, bool isKeyValue)
         {
             if (_treeValues == null)
             {
@@ -37,20 +37,23 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime
             {
                 if (defaultValue is Guid guid)
                 {
-                    _treeValues.Add(new TreeValue(key, valueType) { Value = guid });
+                    _treeValues.Add(new TreeValue(key, valueType, isKeyValue) { Value = guid });
 
                 }
                 else if (defaultValue is string guidString)
                 {
-                    _treeValues.Add(new TreeValue(key, valueType) { Value = Guid.Parse(guidString) });
+                    _treeValues.Add(new TreeValue(key, valueType, isKeyValue) { Value = Guid.Parse(guidString) });
                 }
 
             }
             else
             {
-                _treeValues.Add(new TreeValue(key, valueType) { Value = defaultValue });
+                _treeValues.Add(new TreeValue(key, valueType, isKeyValue) { Value = defaultValue });
             }
         }
+
+
+       
 
         public BehaviorTreePlayer CurrentPlayer { get; internal set; }
 
@@ -59,8 +62,14 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime
             return _treeValues.FirstOrDefault(b => b.Key == valueDefinitionKey.Key);
         }
 
+        internal TreeValue GetTreeValue(string key)
+        {
+            return _treeValues.FirstOrDefault(b => b.Key == key);
+        }
+
         public CompiledNode RootNode { get; private set; }
         public Node SubjectOfTree { get; internal set; }
+        public string DefinitionFile { get; internal set; }
 
         public void Process(float delta)
         {
@@ -99,6 +108,15 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime
 
                     }
                 }
+            }
+        }
+
+        internal void SetValues(Dictionary<string, object> initialValues, BehaviorTreePlayer treePlayer)
+        {
+            foreach (string key in initialValues.Keys)
+            {
+                TreeValue treeValue = TreeValues.First(b => b.Key == key);
+                treeValue.SetValue(initialValues[key], treePlayer);
             }
         }
     }

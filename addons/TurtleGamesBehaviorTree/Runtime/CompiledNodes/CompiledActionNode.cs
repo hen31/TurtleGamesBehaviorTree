@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,10 +40,12 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
             _actionToExecute.DoAction(delta);
             if (_actionToExecute.ActionState == ActionState.Failed)
             {
+                Debug.WriteLine("Action failed: " + _actionToExecute.GetType().FullName + $"({PartOfTree.CurrentPlayer.Filename})");
                 FailExecution();
             }
             else if (_actionToExecute.ActionState == ActionState.Succeeded)
             {
+                Debug.WriteLine("Action finished: " + _actionToExecute.GetType().FullName + $"({PartOfTree.CurrentPlayer.Filename})");
                 FinishExecution();
             }
         }

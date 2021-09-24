@@ -16,6 +16,8 @@ namespace TurtleGames.BehaviourTreePlugin.Storage
         public List<BehaviorTreeNodeDefinition> BehaviorTreeNodes { get; set; } = new List<BehaviorTreeNodeDefinition>();
         public List<BehaviorTreeConnectionDefinition> BehaviorTreeConnections { get; set; } = new List<BehaviorTreeConnectionDefinition>();
         public List<BehaviorTreeValueDefinitionStorage> ValueDefinitions { get; set; } = new List<BehaviorTreeValueDefinitionStorage>();
+        [JsonIgnore]
+        public string FileName { get; private set; }
 
         public static BehaviorTreeDefinition LoadBehaviorTreeFromFile(string behaviorTreeFile)
         {
@@ -26,7 +28,9 @@ namespace TurtleGames.BehaviourTreePlugin.Storage
                 file.Close();
                 var jsonSerializerSettings = new JsonSerializerSettings();
                 jsonSerializerSettings.TypeNameHandling = TypeNameHandling.All;
-                return JsonConvert.DeserializeObject<BehaviorTreeDefinition>(json, jsonSerializerSettings);
+                var definition = JsonConvert.DeserializeObject<BehaviorTreeDefinition>(json, jsonSerializerSettings);
+                definition.FileName = behaviorTreeFile;
+                return definition;
             }
             return null;
         }
@@ -36,9 +40,10 @@ namespace TurtleGames.BehaviourTreePlugin.Storage
             CompiledBehaviorTree compiledBehaviorTree = new CompiledBehaviorTree();
             compiledBehaviorTree.CurrentPlayer = behaviorTreePlayer;
             compiledBehaviorTree.SubjectOfTree = subject;
+            compiledBehaviorTree.DefinitionFile = FileName;
             foreach (var valueDefinition in ValueDefinitions)
             {
-                compiledBehaviorTree.AddTreeValue(valueDefinition.Key, valueDefinition.DefaultValue, valueDefinition.ValueType);
+                compiledBehaviorTree.AddTreeValue(valueDefinition.Key, valueDefinition.DefaultValue, valueDefinition.ValueType, valueDefinition.IsKeyValue);
             }
 
             var rootNode = BehaviorTreeNodes.Single(b => b is TreeRootNodeDefinition) as TreeRootNodeDefinition;
@@ -106,7 +111,7 @@ namespace TurtleGames.BehaviourTreePlugin.Storage
             {
                 nodeBefore = nodeBefore.PreviousNode;
             }
-            
+
             compiledNode.PreviousNode = nodeBefore;
             return compiledNode;
         }

@@ -16,6 +16,7 @@ namespace TurtleGames.BehaviourTreePlugin.Storage
             Key = behaviorTreeValueDefinition.Key;
             ValueType = behaviorTreeValueDefinition.ValueType;
             DefaultValue = behaviorTreeValueDefinition.DefaultValue;
+            IsKeyValue = behaviorTreeValueDefinition.IsKeyValue;
         }
 
         public string Key { get; set; }
@@ -23,6 +24,7 @@ namespace TurtleGames.BehaviourTreePlugin.Storage
         public ValueTypeDefinition ValueType { get; set; } = ValueTypeDefinition.String;
 
         public object DefaultValue { get; set; }
+        public bool IsKeyValue { get; set; }
 
         internal BehaviorTreeValueDefinition ToValueDefinition()
         {
@@ -30,6 +32,7 @@ namespace TurtleGames.BehaviourTreePlugin.Storage
             behaviorTreeValueDefinition.Key = Key;
             behaviorTreeValueDefinition.ValueType = ValueType;
             behaviorTreeValueDefinition.DefaultValue = DefaultValue;
+            behaviorTreeValueDefinition.IsKeyValue = IsKeyValue;
             return behaviorTreeValueDefinition;
         }
     }

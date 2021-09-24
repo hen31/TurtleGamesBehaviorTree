@@ -101,7 +101,11 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
                 case ConditionOperator.IsSet:
                     if (valueFromTreeValue is bool valueAsBool)
                     {
-                        return valueAsBool == true;
+                        return valueAsBool;
+                    }
+                    else if (valueFromTreeValue is Guid treeValueAsGuid)
+                    {
+                        return treeValueAsGuid != Guid.Empty;
                     }
                     else
                     {
@@ -110,11 +114,15 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
                 case ConditionOperator.IsNotSet:
                     if (valueFromTreeValue is bool treeValueAsBool)
                     {
-                        return treeValueAsBool != true;
+                        return !treeValueAsBool;
+                    }
+                    else if (valueFromTreeValue is Guid treeValueAsGuid)
+                    {
+                        return treeValueAsGuid == Guid.Empty;
                     }
                     else
                     {
-                        return condition.TreeValueDefinition.GetValue() != null;
+                        return condition.TreeValueDefinition.GetValue() == null;
                     }
                 case ConditionOperator.Equal:
                     return valueFromTreeValue.Equals(condition.Value);

@@ -16,7 +16,7 @@ public class BehaviourTreeDock : Control
     FileDialog _fileDialog;
     CurrentFileUsage _currentFileUsage;
     GridContainer _valueDefinitionsContainer;
-    private Dictionary<BehaviorTreeValueDefinition, (LineEdit NameEdit, OptionButton ValueTypeButton, Node DefaultValueControl, Button DeleteButton)> _definitionNodeMapping = new Dictionary<BehaviorTreeValueDefinition, (LineEdit NameEdit, OptionButton ValueTypeButton, Node DefaultValueControl, Button DeleteButton)>();
+    private Dictionary<BehaviorTreeValueDefinition, (LineEdit NameEdit, OptionButton ValueTypeButton, Node DefaultValueControl, Button DeleteButton, CheckBox KeyValue)> _definitionNodeMapping = new Dictionary<BehaviorTreeValueDefinition, (LineEdit NameEdit, OptionButton ValueTypeButton, Node DefaultValueControl, Button DeleteButton, CheckBox KeyValue)>();
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -32,7 +32,7 @@ public class BehaviourTreeDock : Control
         GetNode<Button>("VBoxContainer/HBox/VBoxContainer/AddValueBtn").Connect("pressed", this, nameof(AddValueDefinitionClicked));
         GetNode<Button>("VBoxContainer/HBoxContainer/AddGateBtn").Connect("pressed", this, nameof(AddGateClicked));
         GetNode<Button>("VBoxContainer/HBoxContainer/AddSubBtn").Connect("pressed", this, nameof(AddSubTreeClicked));
-        
+
         _valueDefinitionsContainer = GetNode<GridContainer>("VBoxContainer/HBox/VBoxContainer/ScrollContainer/ValueDefinitionsGrid");
 
         _fileDialog = GetNode<FileDialog>("FileDialog");
@@ -98,12 +98,24 @@ public class BehaviourTreeDock : Control
         var dynamicControl = GetControlForValueType(behaviorTreeValueDefinition);
         _valueDefinitionsContainer.AddChild(dynamicControl);
 
+        CheckBox isKeyValueCb = new CheckBox();
+        isKeyValueCb.Text = "KV";
+        isKeyValueCb.Pressed = behaviorTreeValueDefinition.IsKeyValue;
+        isKeyValueCb.Connect("pressed", this, nameof(IsKeyValueChecked), new Godot.Collections.Array() { isKeyValueCb, behaviorTreeValueDefinition });
+        _valueDefinitionsContainer.AddChild(isKeyValueCb);
+
         Button deleteBtn = new Button();
         deleteBtn.Text = "Delete";
         deleteBtn.Connect("pressed", this, nameof(DeleteValueDefinition), new Godot.Collections.Array() { behaviorTreeValueDefinition });
         _valueDefinitionsContainer.AddChild(deleteBtn);
 
-        _definitionNodeMapping.Add(behaviorTreeValueDefinition, (textEdit, optionButton, dynamicControl, deleteBtn));
+
+        _definitionNodeMapping.Add(behaviorTreeValueDefinition, (textEdit, optionButton, dynamicControl, deleteBtn, isKeyValueCb));
+    }
+
+    private void IsKeyValueChecked(CheckBox isKeyValueCb, BehaviorTreeValueDefinition behaviorTreeValueDefinition)
+    {
+        behaviorTreeValueDefinition.IsKeyValue = isKeyValueCb.Pressed;
     }
 
     private void DeleteValueDefinition(BehaviorTreeValueDefinition valueDefinition)
@@ -114,6 +126,7 @@ public class BehaviourTreeDock : Control
         controls.DeleteButton.QueueFree();
         controls.NameEdit.QueueFree();
         controls.ValueTypeButton.QueueFree();
+        controls.KeyValue.QueueFree();
     }
 
     private Node GetControlForValueType(BehaviorTreeValueDefinition valueDefinition)
@@ -146,11 +159,11 @@ public class BehaviourTreeDock : Control
 
     private object DetermineDefaultValue(ValueTypeDefinition valueType)
     {
-        if(valueType == ValueTypeDefinition.Guid)
+        if (valueType == ValueTypeDefinition.Guid)
         {
             return Guid.Empty;
         }
-        else if(valueType == ValueTypeDefinition.Float)
+        else if (valueType == ValueTypeDefinition.Float)
         {
             return 0f;
         }
