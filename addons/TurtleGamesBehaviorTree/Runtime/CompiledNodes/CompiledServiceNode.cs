@@ -36,7 +36,7 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
         {
             base.Initialize();
             _serviceToExecute.InitializeService();
-            _sinceLastTime = 0f;
+            _sinceLastTime = float.MaxValue;
             _subNode.Initialize();
         }
 

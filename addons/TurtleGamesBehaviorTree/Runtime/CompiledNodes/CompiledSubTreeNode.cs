@@ -18,6 +18,7 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
         private BehaviorTreeDefinition _subTreeDefinition;
         private CompiledBehaviorTree _compiledBehaviorTree;
         private string _file;
+        private bool _started;
         public override void CompileFromDefinition(BehaviorTreeDefinition behaviorTreeDefinition, BehaviorTreeNodeDefinition currentNode, CompiledBehaviorTree compiledBehaviorTree)
         {
             _parentBehaviorTreePlayer = compiledBehaviorTree.CurrentPlayer;
@@ -30,20 +31,8 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
         public override void Initialize()
         {
             base.Initialize();
-            if (_subBehaviorTreePlayer?.Ended == false && _subBehaviorTreePlayer?.Stopping == false)
-            {
-                _subBehaviorTreePlayer?.QueueFree();
+            _started = false;
 
-            }
-            _subBehaviorTreePlayer = new BehaviorTreePlayer
-            {
-                Name = _file,
-                BehaviorTree = _file
-            };
-            _subBehaviorTreePlayer.SetTreeDefinition(_subTreeDefinition);
-            _subBehaviorTreePlayer.SetLinkedValues(_subBehaviorTreeStorage.ValueDefinitionValues, _compiledBehaviorTree);
-            GetTopMostBehaviorTreePlayer().EmitSignal(nameof(BehaviorTreePlayer.SubBehaviorTreePlayerCreated), _subBehaviorTreePlayer);
-            _parentBehaviorTreePlayer.AddChild(_subBehaviorTreePlayer);
         }
 
         private BehaviorTreePlayer GetTopMostBehaviorTreePlayer()
@@ -65,9 +54,28 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime.CompiledNodes
 
         public override void Process(float delta)
         {
+            if (!_started)
+            {
+                if (_subBehaviorTreePlayer?.Ended == false && _subBehaviorTreePlayer?.Stopping == false)
+                {
+                    _subBehaviorTreePlayer?.QueueFree();
+
+                }
+                _subBehaviorTreePlayer = new BehaviorTreePlayer
+                {
+                    Name = _file,
+                    BehaviorTree = _file
+                };
+                _subBehaviorTreePlayer.SetTreeDefinition(_subTreeDefinition);
+                _subBehaviorTreePlayer.SetLinkedValues(_subBehaviorTreeStorage.ValueDefinitionValues, _compiledBehaviorTree);
+                GetTopMostBehaviorTreePlayer().EmitSignal(nameof(BehaviorTreePlayer.SubBehaviorTreePlayerCreated), _subBehaviorTreePlayer);
+                _parentBehaviorTreePlayer.AddChild(_subBehaviorTreePlayer);
+                Debug.WriteLine("Startbehaviortreesub: " + _file + string.Join(",", _compiledBehaviorTree.TreeValues.Where(b => _subBehaviorTreeStorage.ValueDefinitionValues.Any(c => c.LinkedTo == b.Key)).Select(b => b.Value.ToString()).ToArray()));
+                _started = true;
+            }
             if (_subBehaviorTreePlayer.Ended)
             {
-                Debug.WriteLine("Sub tree ended: " + _file);
+                Debug.WriteLine("Sub tree ended: " + _file + string.Join(",", _subBehaviorTreePlayer.GetCompiledBehaviorTree().TreeValues.Where(b => b.IsKeyValue).Select(b => b.Value.ToString()).ToArray()));
                 FinishExecution();
             }
         }

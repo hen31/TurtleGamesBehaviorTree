@@ -56,6 +56,7 @@ namespace TurtleGames.BehaviourTreePlugin.Nodes
         public override void _Ready()
         {
             base._Ready();
+            PauseMode = PauseModeEnum.Inherit;
             if (!string.IsNullOrWhiteSpace(BehaviorTree) && BehaviorTreeDefinition == null)
             {
                 BehaviorTreeDefinition = BehaviorTreeDefinition.LoadBehaviorTreeFromFile(BehaviorTree);

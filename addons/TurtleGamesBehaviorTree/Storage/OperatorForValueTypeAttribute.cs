@@ -2,6 +2,7 @@
 
 namespace TurtleGames.BehaviourTreePlugin.Storage
 {
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public  class OperatorForValueTypeAttribute : Attribute
     {
         public ValueTypeDefinition[] ValidForValueTypes { get; set; }
