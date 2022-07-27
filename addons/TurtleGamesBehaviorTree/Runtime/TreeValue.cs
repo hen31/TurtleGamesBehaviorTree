@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MyBakkery.Nodes;
-using MyBakkery.SaveData;
-using MyBakkery.Systems.SaveSystem;
 
 namespace TurtleGames.BehaviourTreePlugin.Runtime
 {
@@ -56,10 +53,9 @@ namespace TurtleGames.BehaviourTreePlugin.Runtime
                     return value;
                 }
             }
-            else if (ValueType == ValueTypeDefinition.NodeReference && value is NodeReferenceSaveData nodeReferenceSaveData)
+            else if (ValueType == ValueTypeDefinition.NodeReference)
             {
-                var loader = SaveableNodeRegistry.GetSaveableNodeFinder(nodeReferenceSaveData.NodeType);
-                return loader.FindNodeForType(nodeReferenceSaveData.NodeId, behaviorTreePlayer.FindParentOfType<RestaurantNode>());
+                return null; //TODO: Generic find node
             }
             else
             {

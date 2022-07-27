@@ -36,12 +36,12 @@ namespace TurtleGames.BehaviourTreePlugin
             base._Ready();
             _controlsMapping = new System.Collections.Generic.Dictionary<BehaviorTreeValueDefinitionStorage, (OptionButton ValueDefinitionControl, CheckButton SyncButton)>();
             SetSlot(0, true, 1, Colors.White, false, 0, Colors.White);
-            _selectedLineEdit = this.SetNodeFromNodePath<LineEdit>(SelectedLineEdit);
-            _selectTreeBtn = this.SetNodeFromNodePath<Button>(SelectTreeBtn);
+            _selectedLineEdit = this.GetNode<LineEdit>(SelectedLineEdit);
+            _selectTreeBtn = this.GetNode<Button>(SelectTreeBtn);
             _selectTreeBtn.Connect("pressed", this, nameof(SelectBehaviorTreeClicked));
-            _selectTreeDialog = this.SetNodeFromNodePath<FileDialog>(SelectTreeDialog);
+            _selectTreeDialog = this.GetNode<FileDialog>(SelectTreeDialog);
             _selectTreeDialog.Connect("file_selected", this, nameof(FileSelected));
-            _treeValuesContainer = this.SetNodeFromNodePath<GridContainer>(TreeValuesContainer);
+            _treeValuesContainer = this.GetNode<GridContainer>(TreeValuesContainer);
             GetParent<BehaviorTreeGraphEdit>().Connect(nameof(BehaviorTreeGraphEdit.ValueDefinitionsChanged), this, nameof(ValueDefinitionsHasChanged));
         }
 
